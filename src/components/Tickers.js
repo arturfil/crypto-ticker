@@ -1,9 +1,26 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import Cryptocurrency from './Cryptocurrency';
 import './Tickers.css';
 
 class Tickers extends Component {
+
+    fetchCryptocurrencyData() {
+        axios.get("https://api.coinmarketcap.com/v1/ticker/?limit=10")
+            .then(response => {
+                var wanted = ["bitcoin", "ethereum", "litecoin"];
+                var result = response.data.filter(currency => wanted.includes(currency.id));
+                this.setState({data: result});
+            })
+            .catch(err => console.log(err));
+    }
+
+    componentDidMount() {
+        this.fetchCryptocurrencyData();
+        this.interval = setInterval(() => this.fetchCryptocurrencyData(), 1 * 1000);
+    }
+
     state = {
         data: [
             {
@@ -12,17 +29,17 @@ class Tickers extends Component {
                 symbol: "BTC",
                 price_usd: "1",
                 percent_change_1h: "0",
-                percent_change_1h: "0",
-                percent_change_1h: "0",
+                percent_change_24h: "0",
+                percent_change_7days: "0",
             },
             {
-                id: "etherium",
-                name: "Etherium",
+                id: "ethereum",
+                name: "Ethereum",
                 symbol: "ETH",
                 price_usd: "1",
                 percent_change_1h: "0",
-                percent_change_1h: "0",
-                percent_change_1h: "0",
+                percent_change_24h: "0",
+                percent_change_7days: "0",
             },
             {
                 id: "litecoin",
@@ -30,8 +47,8 @@ class Tickers extends Component {
                 symbol: "LTC",
                 price_usd: "1",
                 percent_change_1h: "0",
-                percent_change_1h: "0",
-                percent_change_1h: "0",
+                percent_change_24h: "0",
+                percent_change_7days: "0",
             }
         ]
     }
